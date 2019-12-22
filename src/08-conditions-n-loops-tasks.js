@@ -275,8 +275,15 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const ccnArr = String(ccn).split('').reverse();
+  const controlArr = ccnArr.map((el, index) => (
+    // eslint-disable-next-line no-nested-ternary
+    (index % 2 !== 0) ? (el * 2 > 9) ? el * 2 - 9 : el * 2
+      : +el
+  ));
+  const sum = controlArr.reduce((acc, el) => acc + el);
+  return sum % 10 === 0;
 }
 
 /**
@@ -293,8 +300,14 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  function getSum(n) {
+    const sum = String(n).split('').reduce((acc, el) => acc + Number(el), 0);
+    return sum;
+  }
+
+  const answer = getSum(num);
+  return answer > 9 ? getDigitalRoot(answer) : answer;
 }
 
 
@@ -319,8 +332,15 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const brackets = ['[]', '{}', '()', '<>'];
+  let strOfBrackets = str;
+  for (let i = 0; i < 5; i += 1) {
+    for (let j = 0; j < brackets.length; j += 1) {
+      strOfBrackets = strOfBrackets.replace(brackets[j], '');
+    }
+  }
+  return strOfBrackets === '';
 }
 
 
@@ -330,7 +350,7 @@ function isBracketsBalanced(/* str */) {
  * See more about
  * https://en.wikipedia.org/wiki/Binary_number
  * https://en.wikipedia.org/wiki/Ternary_numeral_system
- * https://en.wikipedia.org/wiki/Radix
+ * c
  *
  * @param {number} num
  * @param {number} n, radix of the result
@@ -344,8 +364,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -361,8 +381,17 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/webalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const firstPath = pathes[0];
+  let answer = '';
+  for (let i = 0; i < firstPath.length; i += 1) {
+    const symbol = firstPath[i];
+    for (let j = 1; j < pathes.length; j += 1) {
+      if (symbol !== pathes[j][i]) return answer.slice(0, answer.lastIndexOf('/') + 1);
+    }
+    answer += symbol;
+  }
+  return '';
 }
 
 
@@ -384,10 +413,22 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
-}
+function getMatrixProduct(a, b) {
+  const rowsA = a.length;
+  const rowsB = b.length;
+  const colsB = b[0].length;
+  const result = [];
 
+  for (let i = 0; i < rowsA; i += 1) result[i] = [];
+  for (let k = 0; k < colsB; k += 1) {
+    for (let i = 0; i < rowsA; i += 1) {
+      let t = 0;
+      for (let j = 0; j < rowsB; j += 1) t += a[i][j] * b[j][k];
+      result[i][k] = t;
+    }
+  }
+  return result;
+}
 
 /**
  * Returns the evaluation of the specified tic-tac-toe position.
